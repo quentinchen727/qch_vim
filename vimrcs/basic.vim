@@ -37,7 +37,7 @@ filetype indent on
 set autoread
 
 " With a map leader it's possible to do extra key combinations
-let mapleader = ","
+let mapleader = " "
 
 " quick editing and sourcing vimrc config file
 nnoremap <leader>ev :vsplit $MYVIMRC<cr> " $MYVIMRC resolves to ~/.vimrc
@@ -208,22 +208,65 @@ set linebreak
 
 """"""""""""" => Visual mode related {{{
 " Visual mode pressing * or # searching for the current selection
-vnoremap <silent> * :<C-u>call VisualSelection('', '')<CR>/<C-R>=@/<CR><CR>
+" <C-R>=@/<CR> also gets the / register, which == <C-R>/
+vnoremap <silent> * :<C-u>call VisualSelection('', '')<CR>/<C-R>=@/<CR><CR> 
+vnoremap <silent> # :<C-u>call VisualSelection('', '')<CR>?<C-R>/<CR>
+"""""""""""""""""""""""""""""""}}}
 
-""""""""""""""""""""""""""""""""}}}
+""""""""""""""""" => Moving around, tabs, windows and buffers {{{
+" Disable highlight
+nnoremap <silent> <leader><cr> :noh<cr>
+
+" Smart way to move between windows
+nnoremap <C-j> <C-W>j
+nnoremap <C-k> <C-W>k
+nnoremap <C-h> <C-W>h
+nnoremap <C-l> <C-w>l
+
+" Buffer management
+nnoremap <leader>bd :bd<cr>
+nnoremap <leader>ba :bufdo bd<cr> " Close all buffers
+nnoremap <leader>l :bnext<cr>
+nnoremap <leader>h :bprevious<cr>
+
+" Tab management. Not that useful
+nnoremap <leader>tn :tabnew<cr>
+nnoremap <leader>to: tabonly<cr>
+nnoremap <leader>tc: tabclose<cr>
+nnoremap <leader>tm: tabmove
+nnoremap <leader>t<leader> :tabnext
+
+" toggle between tabs
+if !exists("g:lasttab")
+    let g:lasttab = 1
+endif
+" equivalent: nmap <leader>tl :exe "tabn ". g:lasttab<cr>
+nnoremap <leader>tl :tabn <C-r>=g:lasttab<cr><cr>
+au TabLeave * let g:lasttab = tabpagenr()
+
+" Opens a new tab with the current buffer's path
+" Super useful when editing files in the same directory
+nnoremap <leader>te :tabedit <C-r>=expand("%:p:h")<cr>/
+
+" Switch CWD to the directory of the open buffer for all windows
+" lcd only changes the directory of the current window
+map <leader>cd :cd %:h<cr>:pwd<cr>
 
 """"""""""""" => Helper functions{{{
-" Uscope function must start with a big cap
+" Unscoped function must start with a big cap
 function! CmdLine(str)
     call feedkeys(":" . a:str)
 endfunction
 
 function! VisualSelection(direction, extra_filter) range
     let l:saved_reg = @"
-    execute "normal! vgvy"
+    " Move and copy the last v selection
+    execute "normal! gvy"
 
-    let l:pattern = escape(@", "\\/.*'$^~[]")
-    let l:pattern = substitute(l:pattern, "\n$", "", "")
+    " escape all in second parmaters with '\'
+    let l:pattern = escape(@", "\\/.*'$^~[]") 
+    " substitute pattern with replace and flags
+    let l:pattern = substitute(l:pattern, "\n$", "", "") 
 
     if a:direction == 'gv'
         call CmdLine("Ack '" . l:pattern . "' ")
@@ -241,3 +284,6 @@ call plug#begin('~/vimfiles/bundle')
 Plug 'scrooloose/nerdtree', {'on': 'NERDTreeToggle'}
 
 call plug#end()
+
+""""""""""""""""""""""""""""""""}}}
+
