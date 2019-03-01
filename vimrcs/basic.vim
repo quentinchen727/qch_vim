@@ -231,9 +231,9 @@ nnoremap <leader>h :bprevious<cr>
 
 " Tab management. Not that useful
 nnoremap <leader>tn :tabnew<cr>
-nnoremap <leader>to: tabonly<cr>
-nnoremap <leader>tc: tabclose<cr>
-nnoremap <leader>tm: tabmove
+nnoremap <leader>to :tabonly<cr>
+nnoremap <leader>tc :tabclose<cr>
+nnoremap <leader>tm :tabmove
 nnoremap <leader>t<leader> :tabnext
 
 " toggle between tabs
@@ -253,6 +253,7 @@ nnoremap <leader>te :tabedit <C-r>=expand("%:p:h")<cr>/
 map <leader>cd :cd %:h<cr>:pwd<cr>
 
 """"""""""""" => Helper functions{{{
+" Use "<register> y to paste into <register>
 " Unscoped function must start with a big cap
 function! CmdLine(str)
     call feedkeys(":" . a:str)
