@@ -4,7 +4,7 @@
 " Basic version to learn from @amix3k
 " Github link: https://github.com/amix/vimrc
 "
-" 
+"
 " Sections:
 "         -> General
 "         -> VIM user interface
@@ -29,7 +29,8 @@ set nocompatible
 " Sets how many lines of history vim has to remember
 set history=500
 
-" Enable filetype plugins
+" enable filetype plugins and indent, the filetyp alsjo being enabled. See :filetype-overview
+
 filetype plugin on
 filetype indent on
 
@@ -40,7 +41,7 @@ set autoread
 let mapleader = " "
 
 " quick editing and sourcing vimrc config file
-nnoremap <leader>ev :vsplit $MYVIMRC<cr> " $MYVIMRC resolves to ~/.vimrc
+nnoremap <leader>ev :n $MYVIMRC<cr> " $MYVIMRC resolves to ~/.vimrc
 nnoremap <leader>sv :source $MYVIMRC<cr>
 
 " nocompatible with vi
@@ -172,7 +173,7 @@ set encoding=utf8
 
 " Use Unix as the standard file type to interpret end of line <EOL>
 " dos: <CR><NL> \r\n ; unix: <NL> \n ; mac: <CR> \r ;
-set ffs=unix,dos,mac 
+set ffs=unix,dos,mac
 
 """""""""""""""""""""""""""""""""""""""""""""""}}}
 
@@ -196,7 +197,7 @@ set tabstop=4 " <Tab> calculation for :rehab/expandtab?
 set softtabstop=4 " number of spaces to insert a tab
 
 " Copy the current indent to new lines; delete it if nothing is added
-set autoindent 
+set autoindent
 " Be smart with autoindenting, like after a line ending with {
 set smartindent
 
@@ -209,7 +210,7 @@ set linebreak
 """"""""""""" => Visual mode related {{{
 " Visual mode pressing * or # searching for the current selection
 " <C-R>=@/<CR> also gets the / register, which == <C-R>/
-vnoremap <silent> * :<C-u>call VisualSelection('', '')<CR>/<C-R>=@/<CR><CR> 
+vnoremap <silent> * :<C-u>call VisualSelection('', '')<CR>/<C-R>=@/<CR><CR>
 vnoremap <silent> # :<C-u>call VisualSelection('', '')<CR>?<C-R>/<CR>
 """""""""""""""""""""""""""""""}}}
 
@@ -237,7 +238,7 @@ nnoremap <leader>tm :tabmove
 nnoremap <leader>t<leader> :tabnext
 
 " toggle between tabs
-if !exists("g:lasttab")
+if !exists("g:lasttab") " check if some option/variable exists
     let g:lasttab = 1
 endif
 " equivalent: nmap <leader>tl :exe "tabn ". g:lasttab<cr>
@@ -252,9 +253,102 @@ nnoremap <leader>te :tabedit <C-r>=expand("%:p:h")<cr>/
 " lcd only changes the directory of the current window
 map <leader>cd :cd %:h<cr>:pwd<cr>
 
+" Specify the behavior when swithcing between buffers
+try
+    set switchbuf=useopen,usetab,newtab
+catch
+endtry
+
+" always show the tab line
+set showtabline=2
+
+" Return to last known position when opening files
+" 'g;' go the last position in change list; g'" go the last known position
+" '": the cursor position when last existing the current
+au BufReadPost * if line("'\"") > 1 && line ("'\"") <= line("$") | exe "normal! g'\"" | endif
+
+""""""""""""""}}}
+
+""""""""""""" => Statue line{{{
+" Always show the status line
+    set laststatus=2
+
+" Format the status line %-0{minwid}.{maxwid}{item}
+" %F: full path; $m: modified flag; %r: readonly; %h: help; %w: preview
+set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ PWD:\ %{getcwd()}\ \ \ Line:\ %l\ \ Column:\ %c\ %P
+"""""""""""""""}}}
+
+""""""""""""""""""""""" => Editing mappings{{{
+"  Move a line of text using ALT=[jk] or Command+[jk] on mac
+nnoremap <M-j> mz:m+<cr>`z
+nnoremap <M-k> mz:m-2<cr>`z
+"  Move a line/lines of text using ALT+[jk] or Command+[jk] on mac
+vnoremap <M-j> :m'>+<cr>'<my'>mzgv'yo'z
+vnoremap <M-k> :m'<-2<cr>'>my'<mzgv'yo'z
+
+if has("mac") || has("macunix")
+    nnoremap <D-j> <M-j>
+    nnoremap <D-k> <M-k>
+    vnoremap <D-j> <M-j>
+    vnoremap <D-k> <M-k>
+endif
+
+" Deleting all trailing white space on save, useful for some filetypes
+fun! CleanExtraSpaces()
+    let save_cursor = getpos(".") " get position of the current cursor
+    let old_query = getreg('/') " get register /
+    silent! %s/\s\+$//e   " e flag suppresses errors
+    call setpos('.', save_cursor)
+    call setreg('/', old_query)
+endfun
+
+if has("autocmd")
+    autocmd BufWritePre *.txt,*.js,*.py,*.wiki,*.sh,*.vimrc :call CleanExtraSpaces()
+endif
+""""""""""""""}}}
+
+""""""""""""" => Spell checking{{{
+" toggle and untoggle spell checking
+noremap <leader>ss :setlocal spell!<cr>
+noremap <leader>sp [s
+noremap <leader>sa zg
+noremap <leader>s? z=
+
+"""""""""""""""}}}
+
+""""""""""""""" => jumplist, locationlist, quickfix{{{
+" jumplist does not rember j/k/h/l/<c-d>/<c-u>;<c-o> goes back, <c-i> forward; It seems jumplist is implemented using hashmap and deque, similar to LRU, except it uses a pointer to record the current position. When you use a jump command, the current position is inserted at the end.
+" m' set the previous context mark, and it can be used to switch between previous and current context;
+" location-quickfix list is per window; quickfix is per file.
+"""""""""""""""}}}
+
+""""""""""""" => Misc{{{
+" Remove the Windows ^M - when the encoding gets messed up
+noremap <leader>m mmHmt:%s/<C-V><cr>//ge<cr>'tzt'm
+
+" Quickly open a buffer for scribble
+noremap <leader>q :e ~/buffer<cr>
+
+" Quickly open a markdown buffer for scribble
+noremap <leader>x :e ~/buffer.md<cr>
+
+" Toggle paste mode no and off
+noremap <leader>pp :setlocal paste!<cr>
+"""""""""""}}}
+
 """"""""""""" => Helper functions{{{
 " Use "<register> y to paste into <register>
 " Unscoped function must start with a big cap
+" Paste mode is useful if you want to copy some text from one window and paste it in Vim when using Vim in a terminal. GVim can handle it by itself.
+" Different windows have their paste mode.
+" Mapping in insert mode is disabled when paste is on.
+function! HasPaste()
+    if &paste
+        return 'PASTE MODE'
+    endif
+    return ''
+endfunction
+
 function! CmdLine(str)
     call feedkeys(":" . a:str)
 endfunction
@@ -265,9 +359,9 @@ function! VisualSelection(direction, extra_filter) range
     execute "normal! gvy"
 
     " escape all in second parmaters with '\'
-    let l:pattern = escape(@", "\\/.*'$^~[]") 
+    let l:pattern = escape(@", "\\/.*'$^~[]")
     " substitute pattern with replace and flags
-    let l:pattern = substitute(l:pattern, "\n$", "", "") 
+    let l:pattern = substitute(l:pattern, "\n$", "", "")
 
     if a:direction == 'gv'
         call CmdLine("Ack '" . l:pattern . "' ")
@@ -275,14 +369,18 @@ function! VisualSelection(direction, extra_filter) range
         call CmdLine("%s" . '/' . l:pattern . '/')
     endif
 
-    let @/ = l:pattern
-    let @" = l:saved_reg
+    call setreg('/', l:pattern)
+    call setreg('"', l:saved_reg)
+    " Equivalent: let @/ = l:pattern
+    "             let @" = l:saved_reg
 endfunction
 
 " Let Plug manage my plugins
 call plug#begin('~/vimfiles/bundle')
 
 Plug 'scrooloose/nerdtree', {'on': 'NERDTreeToggle'}
+
+nnoremap <leader>' :NERDTreeToggle<cr>
 
 call plug#end()
 
