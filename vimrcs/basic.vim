@@ -383,9 +383,9 @@ Plug 'scrooloose/nerdtree', {'on': 'NERDTreeToggle'}
 nnoremap <leader>' :NERDTreeToggle<cr>
 
 Plug 'lifepillar/vim-solarized8'
-colorscheme solarized8
 
 call plug#end()
 
+colorscheme solarized8
 """"""""""""""""""""""""""""""""}}}
 
