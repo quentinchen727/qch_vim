@@ -29,7 +29,7 @@ set nocompatible
 " Sets how many lines of history vim has to remember
 set history=500
 
-" enable filetype plugins and indent, the filetyp alsjo being enabled. See :filetype-overview
+" enable filetype plugins and indent, the filetype also being enabled. See :filetype-overview
 
 filetype plugin on
 filetype indent on
@@ -381,6 +381,9 @@ call plug#begin('~/vimfiles/bundle')
 Plug 'scrooloose/nerdtree', {'on': 'NERDTreeToggle'}
 
 nnoremap <leader>' :NERDTreeToggle<cr>
+
+Plug 'lifepillar/vim-solarized8'
+colorscheme solarized8
 
 call plug#end()
 
