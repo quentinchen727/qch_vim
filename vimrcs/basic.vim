@@ -395,7 +395,8 @@ if empty(glob('~/.vim/autoload/plug.vim'))
   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
-" Let Plug manage my plugins
+" Let Plug manage my plugins. Designate a directory for plugins.
+" Use windows default for windows, linux and mac
 call plug#begin('~/vimfiles/bundle')
 
 Plug 'scrooloose/nerdtree', {'on': 'NERDTreeToggle'}
