@@ -74,6 +74,9 @@ source $VIMRUNTIME/menu.vim
 " Turn on the wild menu
 set wildmenu " when on, command-line completion prompts above the cmd line
 
+" Show incomplete commands or numbers of characters/lines
+set showcmd
+
 " Ignore compiled files when expanding wildcars or autocompleting
 set wildignore=*.o,*~,*.pyc
 if has("win16") || has("win32")
@@ -84,6 +87,9 @@ endif
 
 " Awalys show current position
 set ruler " on the bottom right: line,column(relative/absolute),percent/top/bottom
+
+" Highlight the current line
+set cursorline
 
 " Height of the command bar
 set cmdheight=2
@@ -223,6 +229,10 @@ nnoremap <C-j> <C-W>j
 nnoremap <C-k> <C-W>k
 nnoremap <C-h> <C-W>h
 nnoremap <C-l> <C-w>l
+
+" Better splits (new windows appear below and to the right)
+set splitbelow
+set splitright
 
 " Buffer management
 nnoremap <leader>bd :bd<cr>
@@ -374,6 +384,16 @@ function! VisualSelection(direction, extra_filter) range
     " Equivalent: let @/ = l:pattern
     "             let @" = l:saved_reg
 endfunction
+
+"""}}}
+
+""""""""""""""""""""""""" =>  Plugins {{{
+" one life-time auto installation of Plug manager
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
 
 " Let Plug manage my plugins
 call plug#begin('~/vimfiles/bundle')
