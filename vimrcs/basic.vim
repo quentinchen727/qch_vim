@@ -403,14 +403,45 @@ Plug 'scrooloose/nerdtree', {'on': 'NERDTreeToggle'}
 
 nnoremap <leader>' :NERDTreeToggle<cr>
 
-Plug 'lifepillar/vim-solarized8'
+" Post hook to compile and install command-t
+Plug 'wincent/command-t', {
+\   'do': 'cd ruby/command-t/ext/command-t && ruby extconf.rb && make'
+\ }
+let g:CommandTFileScanner='watchman'
+let g:CommandTMaxFiles=200000
+
+Plug 'tpope/vim-commentary'
+Plug 'Raimondi/delimitMate'
+
+" Plug 'lifepillar/vim-solarized8'
+Plug 'morhetz/gruvbox'
 
 Plug 'w0rp/ale'
+" Automatic completion
+let g:ale_completion_enabled = 1
+" Include the linter name (e.g. 'hack' or 'hhast'), code, and message in errors
+let g:ale_echo_msg_format = '[%linter%]% [code]% %s'
+" Enable HHAST - this has security implications (see below)
+let g:ale_linters = { 'hack': ['hack', 'hhast'] }
+" Press `K` to view the type in the gutter
+nnoremap <silent> K :ALEHover<CR>
+" Type `gd` to go to definition
+nnoremap <silent> gd :ALEGoToDefinition<CR>
+" Meta-click (command-click) to go to definition
+nnoremap <M-LeftMouse> <LeftMouse>:ALEGoToDefinition<CR>
 
-Plug 'hhvm/vim-hack'
+" show type on hover in a floating bubble
+if v:version >= 801
+  set balloonevalterm
+  let g:ale_set_balloons = 1
+  let balloondelay = 250
+endif
+
+" On-demand loading for hack
+Plug 'hhvm/vim-hack', {'for': ['hack','php']}
 
 call plug#end()
 
-colorscheme solarized8
+" colorscheme solarized8
+colorscheme gruvbox
 """"""""""""""""""""""""""""""""}}}
-
