@@ -385,6 +385,32 @@ function! VisualSelection(direction, extra_filter) range
     "             let @" = l:saved_reg
 endfunction
 
+""""""""""""""""""""""""""""""""""""""""""
+" hackfmt on range
+""""""""""""""""""""""""""""""""""""""""""
+function! HackFmt(width) range
+  let start = a:firstline
+  let end = a:lastline
+  " current range contents, for comparison
+  let curr = join(getline(start, end), "\n")."\n"
+  " the replacement command (passes the full buffer as stdin)
+  let cmd = "hackfmt --line-width=".a:width." --range ".line2byte(start)." ".line2byte(end+1)
+  let output = system(cmd, join(getline(1, '$'), "\n"))
+
+  " if they are the (case-sensitive) same, then don't touch the file
+  if curr ==# output
+    return
+  endif
+
+  " otherwise, delete what's there and put the new output
+  execute start.",".end."d"
+  execute start-1."put =output"
+endfunction
+command! -range -nargs=1 HackFmt <line1>,<line2>call HackFmt(<args>)
+noremap <leader>k :HackFmt<Home>silent <End> 80<CR>
+noremap <leader>kk :HackFmt<Home>silent <End> 80<CR>
+noremap <leader>kl :HackFmt<Home>silent <End> 120<CR>
+
 """}}}
 
 """"""""""""""""""""""""" =>  Plugins {{{
