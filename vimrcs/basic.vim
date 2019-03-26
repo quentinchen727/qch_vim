@@ -430,12 +430,12 @@ nnoremap <silent> gd :ALEGoToDefinition<CR>
 " Meta-click (command-click) to go to definition
 nnoremap <M-LeftMouse> <LeftMouse>:ALEGoToDefinition<CR>
 
-" show type on hover in a floating bubble
-if v:version >= 801
-  set balloonevalterm
-  let g:ale_set_balloons = 1
-  let balloondelay = 250
-endif
+" show type on hover in a floating bubble. This does not work without `balleval`
+" if v:version >= 801
+"   set balloonevalterm
+"   let g:ale_set_balloons = 1
+"   let balloondelay = 250
+" endif
 
 " On-demand loading for hack
 Plug 'hhvm/vim-hack', {'for': ['hack','php']}
