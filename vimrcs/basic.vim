@@ -154,10 +154,9 @@ set foldcolumn=1
 " Always enable syntax hightlighting whatever terminal or GUI we are on; Vim will automatiy detect file type and load the right syntax highlighting.
 syntax enable
 
-" Enable 256 colors plaette in Gnome Terminal
-if $COLORTERM == 'gnome-terminal'
-    set t_Co=256 " number of colors
-endif
+" Enable 256 colors plaette
+set t_Co=256
+set termguicolors
 
 try
     colorscheme desert
