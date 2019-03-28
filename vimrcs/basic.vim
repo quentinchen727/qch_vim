@@ -149,8 +149,13 @@ endif
 " Add a bit extra margin to the left. By default 0
 set foldcolumn=1
 
+" Always highlight column 81 so it's easier to see where
+" cutoff appears on longer screens
 set colorcolumn=81  " highlight column after 'textwidth'
-hi ColorColumn ctermbg=lightgrey guibg=lightgrey
+augroup highlight_81_col
+  autocmd!
+  autocmd BufEnter * highlight ColorColumn ctermbg=lightgrey
+augroup END
 
 """""""""""""""""""""""""""""""""""""""""""""""}}}
 
