@@ -148,6 +148,10 @@ endif
 
 " Add a bit extra margin to the left. By default 0
 set foldcolumn=1
+
+set colorcolumn=81  " highlight column after 'textwidth'
+hi ColorColumn ctermbg=lightgrey guibg=lightgrey
+
 """""""""""""""""""""""""""""""""""""""""""""""}}}
 
 """""""""""""" => Colors and Fonts{{{
@@ -280,7 +284,7 @@ au BufReadPost * if line("'\"") > 1 && line ("'\"") <= line("$") | exe "normal! 
 
 """"""""""""" => Statue line{{{
 " Always show the status line
-    set laststatus=2
+set laststatus=2
 
 " Format the status line %-0{minwid}.{maxwid}{item}
 " %F: full path; $m: modified flag; %r: readonly; %h: help; %w: preview
