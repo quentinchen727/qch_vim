@@ -352,6 +352,12 @@ noremap <leader>x :e ~/buffer.md<cr>
 
 " Toggle paste mode no and off
 noremap <leader>pp :setlocal paste!<cr>
+
+"  Execute the current python file
+augroup python_file
+    autocmd!
+    autocmd FileType python nnoremap <buffer> <leader>e :exec '!py'  shellescape(@%,1)<cr>
+augroup END
 """""""""""}}}
 
 """"""""""""" => Helper functions{{{
@@ -450,13 +456,25 @@ Plug 'Raimondi/delimitMate'
 " Plug 'lifepillar/vim-solarized8'
 Plug 'morhetz/gruvbox'
 
+" Plug 'prabirshrestha/async.vim'
+" Plug 'prabirshrestha/vim-lsp'
+
+" if executable('pyls')
+" " pip install python-language-server
+"     au User lsp_setup call lsp#register_server({
+"         \ 'name': 'pyls',
+"         \ 'cmd': {server_info->['pyls']},
+"         \ 'whitelist': ['python'],
+"         \ })
+" endif
+
 Plug 'w0rp/ale'
 " Automatic completion
 let g:ale_completion_enabled = 1
 " Include the linter name (e.g. 'hack' or 'hhast'), code, and message in errors
 let g:ale_echo_msg_format = '[%linter%]% [code]% %s'
 " Enable HHAST - this has security implications (see below)
-let g:ale_linters = { 'hack': ['hack', 'hhast'] }
+let g:ale_linters = { 'hack': ['hack', 'hhast'] , 'python': ['pyls', 'pylint', 'flake8']}
 " Press `K` to view the type in the gutter
 nnoremap <silent> K :ALEHover<CR>
 " Type `gd` to go to definition
@@ -465,11 +483,11 @@ nnoremap <silent> gd :ALEGoToDefinition<CR>
 nnoremap <M-LeftMouse> <LeftMouse>:ALEGoToDefinition<CR>
 
 " show type on hover in a floating bubble. This does not work without `balleval`
-" if v:version >= 801
-"   set balloonevalterm
-"   let g:ale_set_balloons = 1
-"   let balloondelay = 250
-" endif
+if v:version >= 801
+  set balloonevalterm
+  let g:ale_set_balloons = 1
+  let balloondelay = 250
+endif
 
 " On-demand loading for hack
 Plug 'hhvm/vim-hack', {'for': ['hack','php']}
