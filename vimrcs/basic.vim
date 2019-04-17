@@ -361,6 +361,10 @@ noremap <leader>pp :setlocal paste!<cr>
 augroup python_file
     autocmd!
     autocmd FileType python nnoremap <buffer> <leader>e :exec '!py'  shellescape(@%,1)<cr>
+    " Press `K` to view the type in the gutter
+    autocmd FileType python nnoremap <buffer> <silent> K :ALEHover<CR>
+    " Type `gd` to go to definition
+    autocmd FileType python nnoremap <buffer> <silent> gd :ALEGoToDefinition<CR>
 augroup END
 """""""""""}}}
 
